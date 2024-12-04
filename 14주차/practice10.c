@@ -20,43 +20,39 @@ void getBinary(char bin[], char str[], int n){
     }
 }
 
-int bin2dec(char bin[], int n){
+void complement2(char bin[], int n){
     int i;
-    int sum = 0;
-    int isNegative = (bin[0] == '1');
-
-    if(isNegative){
-        char complement[WORD + 1];
-        for(i = 0; i < n; i++){
-            complement[i] = (bin[i] == '1') ? '0' : '1';
+    for(i = 0; i < n; i++){
+        bin[i] = (bin[i] == '0') ? '1' : '0';
+    }
+    
+    for(i = n-1; i >= 0; i--){
+        if(bin[i] == '0'){
+            bin[i] = '1';
+            break;
+        } else {
+            bin[i] = '0';
         }
-        complement[n] = '\0';
+    }
+}
 
-        int carry = 1;
-        for(i = n - 1; i >= 0; i--){
-            if(complement[i] == '1' && carry == 1){
-                complement[i] = '0';
-            } else if(complement[i] == '0' && carry == 1){
-                complement[i] = '1';
-                carry = 0;
-            }
-        }
+int bin2dec(char bin[], int n){
+    int decimal = 0;
+    int sign = 1;
+    int i;
 
-        for(i = 0; i < n; i++){
-            if(complement[i] == '1'){
-                sum += pow(2, n - i - 1);
-            }
-        }
-        sum = -sum;
-    } else {
-        for(i = 0; i < n; i++){
-            if(bin[i] == '1'){
-                sum += pow(2, n - i - 1);
-            }
+    if(bin[0] == '1'){
+        sign = -1;
+        complement2(bin, n);
+    }
+
+    for(i = 0; i < n; i++){
+        if(bin[i] == '1'){
+            decimal += pow(2, n-1-i);
         }
     }
 
-    return sum;
+    return decimal * sign;
 }
 
 int main(){
